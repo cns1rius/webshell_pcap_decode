@@ -7,35 +7,23 @@ import base64
 import gzip
 from hashlib import md5
 import os
-import sys
 from urllib.parse import unquote
 
-
-def main():
-    godzilla = Godzilla()
-    godzilla.decode_All()
-    # godzilla.response_decode()
-
-
-class antSwords(object):
-    def __init__(self):
-        self.key = 0
+import main
 
 
 class Godzilla(object):
     def __init__(self):
         self.key = "421eb7f1b8e4b3cf"
-        self.passwd = "babyshell"
+        self.passwd = ""
 
     def decode_All(self):
-        f = open("data.txt", "w")
+        f = open("data.md", "w")
         req_command = self.request_decode()
         res_command = self.response_decode()
         if len(req_command) == len(res_command):
             for i in range(len(req_command)):
-                f.write(
-                    f"{i + 1}:\n{req_command[i]}\n\n{res_command[i]}\n----------------------------\n"
-                )
+                f.write(f"# {req_command[i]}\n```ini\n{res_command[i]}\n```\n")
         os.remove("request_data.txt")
         os.remove("response_data.txt")
 
@@ -43,22 +31,21 @@ class Godzilla(object):
         D = bytearray(base64.b64decode(D))
         K = K.encode("utf-8")
         for i in range(len(D)):
-            c = K[(i + 1) & 15]
-            D[i] ^= c
+            D[i] ^= K[(i + 1) & 15]
         try:
-            data = gzip.decompress(D).decode("utf8")
+            data = gzip.decompress(D).decode("utf-8")
         except:
-            data = D.decode("latin1")
+            data = D.decode("utf-8")
         finally:
             return data
 
     def request_decode(self):
         req_list = []
-        os.system(
-            f'tshark -r {file_name} -T fields -Y "http.request.method == POST" -e http.file_data > request_data.txt'
-        )
         with open("request_data.txt") as f:
             lines = f.readlines()
+            if main.is_Godzilla:
+                self.passwd = lines[1].split("&")[1].split("=")[0]
+                print(self.passwd)
             for line in lines:
                 shell = unquote(line.split("&")[1].split("=")[1])
                 if len(shell) <= 300:
@@ -71,10 +58,6 @@ class Godzilla(object):
         return req_list
 
     def response_decode(self):
-        os.system(
-            f'tshark -r {file_name} -T fields -Y "http.response.code==200" -e http.file_data > response_data.txt'
-        )
-
         with open("response_data.txt") as f:
             res_list = []
             lines = f.readlines()
@@ -88,8 +71,3 @@ class Godzilla(object):
                     response_Code = self.xor_Base64_decode(code, self.key)
                     res_list.append(response_Code)
         return res_list
-
-
-if __name__ == "__main__":
-    file_name = sys.argv[1]
-    main()
