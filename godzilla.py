@@ -14,11 +14,11 @@ import main
 
 class Godzilla(object):
     def __init__(self):
-        self.key = "421eb7f1b8e4b3cf"
+        self.key = ""
         self.passwd = ""
 
     def decode_All(self):
-        f = open("data.md", "w")
+        f = open("data.md", "w")  # 覆写操作 注意保存
         req_command = self.request_decode()
         res_command = self.response_decode()
         if len(req_command) == len(res_command):
@@ -26,6 +26,8 @@ class Godzilla(object):
                 f.write(f"# {req_command[i]}\n```ini\n{res_command[i]}\n```\n")
         os.remove("request_data.txt")
         os.remove("response_data.txt")
+        f.close()
+        print("[+] output: ./data.md")
 
     def xor_Base64_decode(self, D, K):  # godzila_PHP_Eval_Xor_Base64_decode
         D = bytearray(base64.b64decode(D))
@@ -45,7 +47,12 @@ class Godzilla(object):
             lines = f.readlines()
             if main.is_Godzilla:
                 self.passwd = lines[1].split("&")[1].split("=")[0]
-                print(self.passwd)
+                php_encoded = lines[1].split("&")[0].split("=")[1].split("%27")[1]
+                php = base64.b64decode("".join(reversed(unquote(php_encoded)))).decode(
+                    "utf-8"
+                )
+                self.key = php.split("key='")[1][:16]
+                print(f"[+] key = {self.key}\n[+] pass = {self.passwd}")
             for line in lines:
                 shell = unquote(line.split("&")[1].split("=")[1])
                 if len(shell) <= 300:

@@ -9,7 +9,19 @@ import godzilla
 
 
 def is_Godzilla():
-    return True
+    if (
+        r"=eval%28base64_decode%28strrev%28urldecode%28%27"  # 按照newstar某题来写的 后续会在此处增加规则 或在tshark出增加筛选
+        in open("request_data.txt").readlines()[1]
+    ):
+        return True
+
+
+def is_Antsword():
+    return False
+
+
+def is_Behinder():
+    return False
 
 
 if __name__ == "__main__":
@@ -20,6 +32,13 @@ if __name__ == "__main__":
     os.system(
         f'tshark -r {filename} -T fields -Y "http.response.code==200" -e http.file_data > response_data.txt'
     )
-    if is_Godzilla():
+    if is_Godzilla():  # 后续如有混淆 可在此处调整优先级
+        print("[*] Using Godzilla")
         godzilla = godzilla.Godzilla()
         godzilla.decode_All()
+    elif is_Antsword():
+        pass
+    elif is_Behinder():
+        pass
+    else:
+        print("[-] Unsupported webshell manager")
