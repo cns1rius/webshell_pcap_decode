@@ -16,7 +16,7 @@ asp、csharp也有可能（可能性不大）
 
 ## 使用方法
 
-`python godzilla.py xxx.pcap(ng)`
+`python main.py xxx.pcap(ng)`
 
 结果保存在./data.txt(覆盖式写入、需要保存时记得另存）
 
