@@ -18,7 +18,7 @@ class Godzilla(object):
         self.passwd = ""
 
     def decode_All(self):
-        f = open("data.md", "w")  # 覆写操作 注意保存
+        f = open("data.md", "w", encoding="gbk", errors="replace")  # 覆写操作 注意保存
         req_command = self.request_decode()
         res_command = self.response_decode()
         if len(req_command) == len(res_command):
@@ -35,9 +35,9 @@ class Godzilla(object):
         for i in range(len(D)):
             D[i] ^= K[(i + 1) & 15]
         try:
-            data = gzip.decompress(D).decode("utf-8")
+            data = gzip.decompress(D).decode("gb2312", errors="replace")
         except:
-            data = D.decode("utf-8")
+            data = D.decode("gb2312")
         finally:
             return data
 
@@ -48,19 +48,28 @@ class Godzilla(object):
             if main.is_Godzilla:
                 self.passwd = lines[1].split("&")[1].split("=")[0]
                 php_encoded = lines[1].split("&")[0].split("=")[1].split("%27")[1]
-                php = base64.b64decode("".join(reversed(unquote(php_encoded)))).decode(
-                    "utf-8"
-                )
+                php = base64.b64decode(
+                    "".join(reversed(unquote(unquote(php_encoded))))
+                ).decode("utf-8")
                 self.key = php.split("key='")[1][:16]
                 print(f"[+] key = {self.key}\n[+] pass = {self.passwd}")
             for line in lines:
                 shell = unquote(line.split("&")[1].split("=")[1])
                 if len(shell) <= 300:
                     request = self.xor_Base64_decode(shell, self.key)
-                    if "cmdLine" in request:
+                    # print(request, end="\n")
+                    if "cmd " in request:
+                        req_command = request.split("&")[1].split('"')[0].strip()
+                    elif "sh " in request:
                         req_command = request.split(";")[1].split('"')[0].strip()
-                    else:
+                    elif "getFiledirName" in request:
+                        req_command = request[34:]
+                    elif "fileName" in request:
+                        req_command = request[13:-30]
+                    elif "methodName" in request:
                         req_command = request[15:]
+                    else:
+                        req_command = request
                     req_list.append(req_command)
         return req_list
 
