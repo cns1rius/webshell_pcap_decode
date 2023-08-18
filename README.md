@@ -22,4 +22,4 @@ asp、csharp 也有可能（可能性不大）
 
 ## 更新日志
 
-- 8、16 更新 已完成 Godzila_PHP_Eval_Xor_Base64_decode 部分（Behinder 目前还不能用）1
+- 8、16 更新 已完成 Godzila_PHP_Eval_Xor_Base64_decode 部分（Behinder 目前还不能用）
