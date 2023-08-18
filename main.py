@@ -6,11 +6,12 @@
 import os
 import sys
 import godzilla
+import behinder
 
 
 def is_Godzilla():
     if (
-        r"=eval%28base64_decode%28strrev%28urldecode%28%27"  # 按照newstar某题来写的 后续会在此处增加规则 或在tshark出增加筛选
+        r"=eval%28base64_decode%28strrev%28urldecode%28%27"  # 按照Eval_Xor_Base64来写的 后续会在此处增加规则 或在tshark出增加筛选
         in open("request_data.txt").readlines()[1]
     ):
         return True
@@ -39,6 +40,7 @@ if __name__ == "__main__":
     elif is_Antsword():
         pass
     elif is_Behinder():
-        pass
+        behinder = behinder.Behinder()
+        behinder.decode_All()
     else:
         print("[-] Unsupported webshell manager")

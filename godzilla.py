@@ -1,7 +1,8 @@
 # @Author: s1rius
-# @Date: 2023-08-15 11:13:02
-# @LastEditTime: 2023-08-15 15:39:35
+# @Date: 2023-08-18 16:52:57
+# @LastEditTime: 2023-08-18 17:16:11
 # @Description: https://s1rius.space/
+
 
 import base64
 import gzip
@@ -35,9 +36,9 @@ class Godzilla(object):
         for i in range(len(D)):
             D[i] ^= K[(i + 1) & 15]
         try:
-            data = gzip.decompress(D).decode("gb2312", errors="replace")
+            data = gzip.decompress(D).decode("gbk", errors="replace")
         except:
-            data = D.decode("gb2312")
+            data = D.decode("gbk")
         finally:
             return data
 
@@ -79,8 +80,7 @@ class Godzilla(object):
             lines = f.readlines()
             for line in lines:
                 if (
-                    md5((self.passwd + self.key).encode("utf-8")).hexdigest()[:16]
-                    in line
+                    md5((self.passwd + self.key).encode("gbk")).hexdigest()[:16] in line
                 ):  # 筛选哥斯拉shell返回值
                     code = line[16:-17]
                     # print(code)
