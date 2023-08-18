@@ -14,6 +14,8 @@
 
 asp、csharp 也有可能（可能性不大）
 
+> 部分源码改自 @webraybtl/[webshell_detect](https://github.com/webraybtl/webshell_detect)
+
 ## 使用方法
 
 `python main.py xxx.pcap(ng)`
